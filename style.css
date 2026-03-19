@@ -307,68 +307,75 @@ main {
 }
 
 /* ---------------------------------------------------------------
-   5. ACCORDION
+   5. KANBAN PIPELINE UI
    --------------------------------------------------------------- */
-.accordion {
-    background: var(--white);
-    border: 1.5px solid var(--border-light);
+.kanban-board {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--sp-lg);
+    padding: var(--sp-sm) var(--sp-xl);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    height: calc(100vh - 120px);
+    align-items: flex-start;
+}
+
+.kanban-col {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: var(--r-xl);
+    min-width: 340px;
+    width: 360px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
     overflow: hidden;
-    transition: box-shadow var(--transition);
-    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
 }
 
-.accordion.open,
-.accordion:focus-within {
+.kanban-col-wide {
+    min-width: 550px;
+    width: 600px;
+}
+
+.kanban-col:focus-within {
     box-shadow: var(--shadow-md);
-    border-color: var(--border-mid);
+    border-color: var(--pink-rose);
 }
 
-.accordion-header {
-    background: linear-gradient(135deg, var(--white), var(--pink-light));
+.col-header {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(251, 207, 232, 0.3));
     padding: var(--sp-md) var(--sp-lg);
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    user-select: none;
-    transition: background var(--transition);
+    border-bottom: 1px solid rgba(0,0,0,0.04);
 }
 
-.accordion-header:hover {
-    background: linear-gradient(135deg, var(--pink-light), var(--pink-mid));
-}
-
-.accordion-header h3 {
-    font-size: 15px;
-    font-weight: 600;
+.col-header h3 {
+    font-size: 16px;
+    font-weight: 700;
     color: var(--pink-dark);
     letter-spacing: 0.2px;
 }
 
-.accordion-icon {
-    font-size: 12px;
-    color: var(--pink-rose);
-    transition: transform var(--transition);
-}
-
-.accordion.open .accordion-icon {
-    transform: rotate(180deg);
-}
-
-.accordion-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.35s ease;
-}
-
-.accordion.open .accordion-content {
-    max-height: 9999px;
-}
-
-.accordion-inner {
+.col-body {
+    flex: 1;
+    overflow-y: auto;
     padding: var(--sp-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-md);
 }
+
+/* Custom scrollbar para colunas */
+.col-body::-webkit-scrollbar { width: 6px; height: 6px; }
+.col-body::-webkit-scrollbar-track { background: transparent; }
+.col-body::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+.col-body::-webkit-scrollbar-thumb:hover { background: var(--pink-rose); }
 
 /* ---------------------------------------------------------------
    6. FIELD CARDS E ROWS

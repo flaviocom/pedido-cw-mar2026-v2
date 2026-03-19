@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CharmWay - Kanban Sales Pipeline</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-rose: #EC4899;
+            --pink-light: #FCE7F3;
+            --pink-bg: #FDF2F8;
+            --sage-green: #34D399;
+            --white: #FFFFFF;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --bg-col: rgba(255, 255, 255, 0.45);
+            --shadow-card: 0 4px 15px rgba(236, 72, 153, 0.08);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FDF2F8 0%, #F8FAFC 100%);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar Glassmorphism */
+        header {
+            padding: 16px 32px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            z-index: 10;
+        }
+
+        .logo { font-size: 20px; font-weight: 800; color: var(--pink-rose); letter-spacing: -0.5px; }
+
+        /* Kanban Layout Horizontal */
+        .kanban-board {
+            display: flex;
+            flex: 1;
+            padding: 24px;
+            gap: 24px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            align-items: flex-start;
+        }
+
+        .kanban-col {
+            background: var(--bg-col);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            width: 320px;
+            min-width: 320px;
+            height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
+            scroll-snap-align: start;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .kanban-col.drag-over {
+            background: rgba(252, 231, 243, 0.8); /* pink-light highlight */
+            border: 2px dashed var(--pink-rose);
+            transform: scale(1.02);
+        }
+
+        .col-header {
+            padding: 20px;
+            background: rgba(255,255,255,0.8);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .col-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .col-count {
+            background: var(--pink-light);
+            color: var(--pink-rose);
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .col-body {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Search input na coluna de produtos */
+        .search-area {
+            padding: 0 16px 16px 16px;
+            background: rgba(255,255,255,0.8);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: var(--transition);
+        }
+        
+        .search-input:focus {
+            border-color: var(--pink-rose);
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
+        }
+
+        /* Cards do Produto (Draggable) */
+        .product-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(0,0,0,0.02);
+            cursor: grab;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:active {
+            cursor: grabbing;
+            transform: scale(0.96) rotate(-2deg);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.2);
+        }
+
+        .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .product-price {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--sage-green);
+        }
+
+        /* Card Estado No Carrinho */
+        .cart-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(236, 72, 153, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .cart-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F8FAFC;
+            padding: 6px;
+            border-radius: 10px;
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: none;
+            background: var(--white);
+            color: var(--pink-rose);
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: 0.1s;
+        }
+
+        .qty-btn:active { transform: scale(0.9); }
+        .qty-input {
+            width: 40px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            font-family: 'Inter';
+            font-size: 14px;
+        }
+        
+        /* Resumo e Pagamento cards */
+        .static-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+        }
+        
+        .static-card h4 { font-size: 12px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+        
+        .select-modern {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--pink-light);
+            background: var(--pink-bg);
+            color: var(--pink-rose);
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .btn-confirm {
+            background: var(--pink-rose);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+            transition: transform 0.2s;
+        }
+        .btn-confirm:active { transform: scale(0.96); }
+
+        /* Custom scrollbar para colunas */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--pink-rose); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">CharmWay Pipeline</div>
+        <div style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Total Acumulado: <strong style="color:var(--sage-green); font-size: 16px;" id="header-total">R$ 0,00</strong></div>
+    </header>
+
+    <div class="kanban-board">
+        
+        <!-- Coluna 1: Produtos Disponíveis -->
+        <div class="kanban-col" id="col-catalog">
+            <div class="col-header">
+                <div class="col-title">📦 Catálogo <span class="col-count" id="catalog-count">145</span></div>
+            </div>
+            <div class="search-area">
+                <input type="text" class="search-input" placeholder="🔍 Pesquisar itens...">
+            </div>
+            <div class="col-body" id="catalog-items">
+                <!-- Cards Draggable -->
+                <div class="product-card" draggable="true" data-id="p1" data-price="49.90" data-name="Sabonete Demaquilante Rosa">
+                    <div class="product-title">Sabonete Demaquilante Rosa</div>
+                    <div class="product-price">R$ 49,90</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Estoque: 45 und</div>
+                </div>
+                <div class="product-card" draggable="true" data-id="p2" data-price="89.00" data-name="Loção Hidratante Intensiva">
+                    <div class="product-title">Loção Hidratante Intensiva</div>
+                    <div class="product-price">R$ 89,00</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Estoque: 12 und</div>
+                </div>
+                <div class="product-card" draggable="true" data-id="p3" data-price="120.00" data-name="Kit Rejuvenescimento">
+                    <div class="product-title">Kit Rejuvenescimento Facial 30d</div>
+                    <div class="product-price">R$ 120,00</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Estoque: 5 und</div>
+                </div>
+                <div class="product-card" draggable="true" data-id="p4" data-price="25.50" data-name="Espelho Portátil CW">
+                    <div class="product-title">Espelho Portátil CharmWay</div>
+                    <div class="product-price">R$ 25,50</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Acessórios</div>
+                </div>
+                <div class="product-card" draggable="true" data-id="p5" data-price="119.90" data-name="Óleo Vitaminado">
+                    <div class="product-title">Óleo Vitaminado Pró-Age</div>
+                    <div class="product-price">R$ 119,90</div>
+                    <div style="font-size:11px; color:var(--text-muted);">Mais vendido da semana</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna 2: Carrinho de Compras -->
+        <div class="kanban-col" id="col-cart">
+            <div class="col-header">
+                <div class="col-title">🛒 Carrinho (Arraste p/ cá) <span class="col-count" id="cart-count">0</span></div>
+            </div>
+            <div class="col-body" id="cart-items" style="padding-bottom:100px;">
+                <!-- Itens arrastados aparecerão aqui -->
+                <div id="empty-cart-msg" style="text-align:center; padding: 40px 20px; color:var(--text-muted); font-size:13px; border: 2px dashed rgba(0,0,0,0.1); border-radius: 16px; margin-top:20px;">
+                    Solte os produtos do catálogo aqui dentro para adicioná-los.
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna 3: Pagamento e Finalização -->
+        <div class="kanban-col" id="col-checkout">
+            <div class="col-header">
+                <div class="col-title">💳 Pagamento & Fechamento</div>
+            </div>
+            <div class="col-body">
+                <div class="static-card">
+                    <h4>Método Principal</h4>
+                    <select class="select-modern">
+                        <option>PIX Automático</option>
+                        <option>Cartão de Crédito</option>
+                        <option>Boleto a Prazo</option>
+                    </select>
+                </div>
+                
+                <div class="static-card">
+                    <h4>Resumo Financeiro</h4>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                        <span style="color:var(--text-muted);">Subtotal</span>
+                        <strong id="summary-subtotal">R$ 0,00</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                        <span style="color:var(--text-muted);">Desconto</span>
+                        <strong style="color:var(--pink-rose);">- R$ 0,00</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:16px; padding-top:16px; border-top:1px solid #eee;">
+                        <span>Acerto Final</span>
+                        <strong style="color:var(--sage-green); font-size:18px;" id="summary-total">R$ 0,00</strong>
+                    </div>
+                </div>
+
+                <div style="margin-top:auto;">
+                    <button class="btn-confirm">💾 Faturar Pedido Agora</button>
+                    <p style="text-align:center; font-size:11px; color:#A0AEC0; margin-top: 10px;">Envia fatura pro WhatsApp automaticamente</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const draggables = document.querySelectorAll('.product-card');
+        const dropZone = document.getElementById('col-cart');
+        const cartBody = document.getElementById('cart-items');
+        const emptyMsg = document.getElementById('empty-cart-msg');
+        
+        let cartTotal = 0;
+        let cartItemCount = 0;
+
+        // Atualizar Financeiros
+        function updateTotals() {
+            document.getElementById('cart-count').innerText = cartItemCount;
+            const formattedTotal = 'R$ ' + cartTotal.toFixed(2).replace('.', ',');
+            document.getElementById('summary-subtotal').innerText = formattedTotal;
+            document.getElementById('summary-total').innerText = formattedTotal;
+            document.getElementById('header-total').innerText = formattedTotal;
+        }
+
+        // --- Lógica Drag and Drop ---
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+                // Haptic feeling delay
+                setTimeout(() => draggable.style.opacity = '0.4', 0);
+            });
+
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+                draggable.style.opacity = '1';
+                dropZone.classList.remove('drag-over');
+            });
+        });
+
+        dropZone.addEventListener('dragover', e => {
+            e.preventDefault(); // Necessário para permitir o drop
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            const draggedEl = document.querySelector('.dragging');
+            if (draggedEl) {
+                adicionarAoCarrinho(draggedEl);
+            }
+        });
+
+        // Adicionar Produto Clicável no HTML do Carrinho
+        function adicionarAoCarrinho(productEl) {
+            emptyMsg.style.display = 'none';
+
+            const id = productEl.getAttribute('data-id');
+            const name = productEl.getAttribute('data-name');
+            const price = parseFloat(productEl.getAttribute('data-price'));
+
+            // Verifica se já existe
+            const existingCard = document.getElementById('cart-item-' + id);
+            if (existingCard) {
+                // Apenas pisca e incrementa
+                const input = existingCard.querySelector('.qty-input');
+                input.value = parseInt(input.value) + 1;
+                cartTotal += price;
+                existingCard.style.transform = 'scale(1.05)';
+                setTimeout(() => existingCard.style.transform = 'scale(1)', 150);
+            } else {
+                // Cria Novo
+                cartItemCount++;
+                cartTotal += price;
+
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-card';
+                cartItem.id = 'cart-item-' + id;
+                cartItem.innerHTML = `
+                    <div>
+                        <div class="product-title">${name}</div>
+                        <div class="product-price">R$ ${price.toFixed(2).replace('.', ',')}</div>
+                    </div>
+                    <div class="cart-controls">
+                        <button class="qty-btn" onclick="updateQty('${id}', -1, ${price})">-</button>
+                        <input type="text" class="qty-input" value="1" readonly>
+                        <button class="qty-btn" onclick="updateQty('${id}', 1, ${price})">+</button>
+                    </div>
+                `;
+                cartBody.appendChild(cartItem);
+            }
+            updateTotals();
+        }
+
+        // Função Global de Qtd pro HTML OnClick
+        window.updateQty = function(id, delta, price) {
+            const card = document.getElementById('cart-item-' + id);
+            const input = card.querySelector('.qty-input');
+            let currentQty = parseInt(input.value);
+            
+            if (currentQty + delta < 1) {
+                // Remover do carrinho
+                cartItemCount--;
+                cartTotal -= price * currentQty;
+                card.style.transform = 'scale(0.8)';
+                card.style.opacity = '0';
+                setTimeout(() => {
+                    card.remove();
+                    if (cartItemCount === 0) emptyMsg.style.display = 'block';
+                }, 200);
+            } else {
+                input.value = currentQty + delta;
+                cartTotal += delta * price;
+            }
+            updateTotals();
+        };
+
+        // Pesquisa no catálogo
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            document.querySelectorAll('.product-card').forEach(card => {
+                const title = card.querySelector('.product-title').innerText.toLowerCase();
+                if (title.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

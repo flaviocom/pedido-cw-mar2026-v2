@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CharmWay - Swipe to Sell</title>
+    <!-- Fontes Premium -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-rose: #EC4899;
+            --pink-light: #FCE7F3;
+            --sage-green: #34D399;
+            --bg-color: #FDF2F8;
+            --text-main: #0F172A;
+            --text-sub: #64748B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: pan-y; /* Permite scroll vertical nativo mas segura o horizontal para o swipe */
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-color);
+            background-image: radial-gradient(circle at top, #FFF0F5 0%, #FDF2F8 100%);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header */
+        .smart-header {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--pink-rose);
+        }
+
+        .cart-status {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.1);
+            color: var(--pink-rose);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Área do Tinder / Stack de Cartas */
+        .swipe-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            overflow: hidden;
+        }
+
+        .tinder-card {
+            position: absolute;
+            width: 85%;
+            max-width: 360px;
+            height: 65vh;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            will-change: transform;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            cursor: grab;
+            border: 1px solid rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .tinder-card:active {
+            cursor: grabbing;
+        }
+
+        /* Foto do Produto Flutuante */
+        .card-image-wrapper {
+            flex: 1;
+            background: linear-gradient(135deg, var(--pink-light), #fff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Selos de Match/Rejeição */
+        .badge {
+            position: absolute;
+            top: 30px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 24px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0;
+            transform: scale(0.8);
+            z-index: 10;
+        }
+
+        .badge.nope {
+            right: 30px;
+            color: #EF4444;
+            border: 3px solid #EF4444;
+            transform: rotate(15deg);
+        }
+
+        .badge.add {
+            left: 30px;
+            color: var(--sage-green);
+            border: 3px solid var(--sage-green);
+            transform: rotate(-15deg);
+        }
+
+        .product-img {
+            width: 80%;
+            height: auto;
+            max-height: 250px;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 20px rgba(0,0,0,0.1));
+            pointer-events: none;
+        }
+
+        /* Detalhes do Produto */
+        .card-info {
+            padding: 24px;
+            background: white;
+            border-top: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .product-tag {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--pink-rose);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: inline-block;
+            background: var(--pink-light);
+            padding: 4px 10px;
+            border-radius: 8px;
+        }
+
+        .product-title {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--sage-green);
+        }
+
+        /* Action Buttons de Apoio */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 20px;
+            padding-bottom: 40px;
+        }
+
+        .btn-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            cursor: pointer;
+            transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-circle.nope:hover, .btn-circle.nope:active {
+            color: #EF4444;
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-circle.add:hover, .btn-circle.add:active {
+            color: var(--sage-green);
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(52, 211, 153, 0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="smart-header">
+        <div class="header-title">CW Swipe</div>
+        <div class="cart-status">
+            🛒 <span id="cart-count">0</span> itens
+        </div>
+    </header>
+
+    <div class="swipe-container" id="swiper">
+        <!-- Cartões de Exemplo Mockados -->
+        <div class="tinder-card" id="card-3">
+            <div class="badge nope">Passar</div>
+            <div class="badge add">Adicionar</div>
+            <div class="card-image-wrapper">
+                <img src="LogotipoCW.jpg" alt="Sabonete Demaquilante" class="product-img" style="border-radius: 10px;">
+            </div>
+            <div class="card-info">
+                <span class="product-tag">Skincare</span>
+                <h2 class="product-title">Sabonete Demaquilante Rosa</h2>
+                <div class="product-price">R$ 49,90</div>
+            </div>
+        </div>
+
+        <div class="tinder-card" id="card-2">
+            <div class="badge nope">Passar</div>
+            <div class="badge add">Adicionar</div>
+            <div class="card-image-wrapper">
+                <img src="LogotipoCW.jpg" alt="Kit Hidratante" class="product-img" style="border-radius: 10px;">
+            </div>
+            <div class="card-info">
+                <span class="product-tag">Corpo</span>
+                <h2 class="product-title">Loção Hidratante Intensiva</h2>
+                <div class="product-price">R$ 89,00</div>
+            </div>
+        </div>
+
+        <div class="tinder-card" id="card-1">
+            <div class="badge nope">Passar</div>
+            <div class="badge add">Adicionar</div>
+            <div class="card-image-wrapper">
+                <img src="LogotipoCW.jpg" alt="Óleo Vitaminado" class="product-img" style="border-radius: 10px;">
+            </div>
+            <div class="card-info">
+                <span class="product-tag">Best Seller</span>
+                <h2 class="product-title">Óleo Vitaminado CharmWay</h2>
+                <div class="product-price">R$ 119,90</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn-circle nope" id="btn-pass">✗</button>
+        <button class="btn-circle add" id="btn-add">❤</button>
+    </div>
+
+    <script>
+        // Lógica de Swiping usando Eventos de Toque Nativo e Mouse
+        const cards = document.querySelectorAll('.tinder-card');
+        const container = document.getElementById('swiper');
+        let cartCount = 0;
+        let startX = 0, currentX = 0;
+        let isDragging = false;
+        let activeCard = null;
+
+        // Pega sempre a carta do topo
+        function updateActiveCard() {
+            const visibleCards = document.querySelectorAll('.tinder-card:not(.removed)');
+            if (visibleCards.length > 0) {
+                activeCard = visibleCards[visibleCards.length - 1]; // O último no DOM renderiza mais pro topo
+                
+                // Remove transição para seguir o dedo suavemente
+                activeCard.style.transition = 'none';
+
+                // Desktop 
+                activeCard.addEventListener('mousedown', startDrag);
+                // Mobile
+                activeCard.addEventListener('touchstart', startDrag, {passive: true});
+            } else {
+                activeCard = null;
+                container.innerHTML = '<h2 style="color:var(--pink-rose); opacity: 0.5;">Catálogo zerado!</h2>';
+            }
+        }
+
+        // Estiliza depth nas cartas 
+        function setupCards() {
+            const visibleCards = document.querySelectorAll('.tinder-card:not(.removed)');
+            visibleCards.forEach((card, index) => {
+                const zIndex = visibleCards.length - index;
+                const scale = 1 - (visibleCards.length - 1 - index) * 0.05;
+                const translateY = (visibleCards.length - 1 - index) * -15;
+                card.style.zIndex = zIndex;
+                if (card !== activeCard || !isDragging) {
+                    card.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+                }
+            });
+        }
+
+        function startDrag(e) {
+            isDragging = true;
+            startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            activeCard.style.transition = 'none';
+        }
+
+        function moveDrag(e) {
+            if (!isDragging || !activeCard) return;
+            const currentPosition = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            currentX = currentPosition - startX;
+            
+            const rotation = currentX * 0.05;
+            activeCard.style.transform = `translateX(${currentX}px) rotate(${rotation}deg)`;
+
+            // Opacidade dos Badges
+            const nopeBadge = activeCard.querySelector('.badge.nope');
+            const addBadge = activeCard.querySelector('.badge.add');
+            
+            if (currentX > 0) {
+                addBadge.style.opacity = Math.min(currentX / 100, 1);
+                addBadge.style.transform = `scale(${Math.min(currentX / 100 + 0.5, 1)}) rotate(-15deg)`;
+                nopeBadge.style.opacity = 0;
+            } else {
+                nopeBadge.style.opacity = Math.min(Math.abs(currentX) / 100, 1);
+                nopeBadge.style.transform = `scale(${Math.min(Math.abs(currentX) / 100 + 0.5, 1)}) rotate(15deg)`;
+                addBadge.style.opacity = 0;
+            }
+        }
+
+        function endDrag(e) {
+            if (!isDragging || !activeCard) return;
+            isDragging = false;
+
+            activeCard.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s';
+            
+            const nopeBadge = activeCard.querySelector('.badge.nope');
+            const addBadge = activeCard.querySelector('.badge.add');
+
+            // Threshold de aprovação
+            if (Math.abs(currentX) > 120) {
+                if (currentX > 0) {
+                    swipeCard('right');
+                } else {
+                    swipeCard('left');
+                }
+            } else {
+                // Voltar pro centro
+                activeCard.style.transform = `translateX(0px) rotate(0deg)`;
+                nopeBadge.style.opacity = 0;
+                addBadge.style.opacity = 0;
+            }
+            currentX = 0;
+        }
+
+        function swipeCard(direction) {
+            if (!activeCard) return;
+            const throwX = direction === 'right' ? window.innerWidth : -window.innerWidth;
+            const rotation = direction === 'right' ? 30 : -30;
+            
+            activeCard.style.transition = 'transform 0.5s ease-out, opacity 0.5s';
+            activeCard.style.transform = `translateX(${throwX}px) rotate(${rotation}deg)`;
+            activeCard.style.opacity = 0;
+            activeCard.classList.add('removed');
+
+            if (direction === 'right') {
+                cartCount++;
+                document.getElementById('cart-count').innerText = cartCount;
+                document.getElementById('cart-count').style.transform = 'scale(1.5)';
+                setTimeout(() => document.getElementById('cart-count').style.transform = 'scale(1)', 200);
+            }
+
+            setTimeout(() => {
+                activeCard.remove();
+                updateActiveCard();
+                setupCards();
+            }, 300);
+        }
+
+        // Listeners Globais
+        window.addEventListener('mousemove', moveDrag);
+        window.addEventListener('mouseup', endDrag);
+        window.addEventListener('touchmove', moveDrag, {passive: true});
+        window.addEventListener('touchend', endDrag);
+
+        document.getElementById('btn-add').addEventListener('click', () => swipeCard('right'));
+        document.getElementById('btn-pass').addEventListener('click', () => swipeCard('left'));
+
+        // Initialize
+        updateActiveCard();
+        setupCards();
+
+    </script>
+</body>
+</html>

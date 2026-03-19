@@ -65,353 +65,279 @@
         </header>
 
         <!-- Formulário Principal -->
-        <main>
+        <main class="kanban-board">
 
-            <!-- ================================================
-                 Accordion 1: Dados do Cliente
-                 ================================================ -->
-            <div class="accordion open">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
+            <!-- COLUNA 1: DADOS DO CLIENTE & EMBALAGENS -->
+            <div class="kanban-col">
+                <div class="col-header">
                     <h3>📋 Dados do Cliente</h3>
-                    <span class="accordion-icon">▼</span>
                 </div>
-                <div class="accordion-content">
-                    <div class="accordion-inner">
-                        <!-- LINHA 1: NOME E ENDEREÇO -->
-                        <div class="name-address-row">
-                            <div class="field-card">
-                                <label class="field-label">NOME</label>
-                                <input type="text" id="reseller-name" class="modern-input"
-                                    placeholder="Digite o nome completo">
-                            </div>
-                            <div class="field-card">
-                                <label class="field-label">ENDEREÇO</label>
-                                <input type="text" id="address" class="modern-input"
-                                    placeholder="Digite o endereço completo">
-                            </div>
+                <div class="col-body">
+                    <div class="name-address-row">
+                        <div class="field-card">
+                            <label class="field-label">NOME</label>
+                            <input type="text" id="reseller-name" class="modern-input"
+                                placeholder="Digite o nome completo">
                         </div>
-
-                        <!-- LINHA 2: TELEFONE, FRETE, TRANSPORTE E ANOTAÇÕES -->
-                        <div class="details-row">
-                            <div class="field-card">
-                                <label class="field-label">TELEFONE</label>
-                                <input type="tel" id="phone" class="modern-input" placeholder="(00) 00000-0000">
-                            </div>
-                            <div class="field-card">
-                                <label class="field-label">FRETE</label>
-                                <input type="number" id="freight" class="modern-input" step="0.01" min="0"
-                                    placeholder="0,00">
-                            </div>
-                            <div class="field-card">
-                                <label class="field-label">TRANSPORTE</label>
-                                <div class="transport-container">
-                                    <select id="transport-select" class="modern-input">
-                                        <option value="">Selecione o transporte</option>
-                                        <option value="Correios - PAC">Correios - PAC</option>
-                                        <option value="Correios - Sedex">Correios - Sedex</option>
-                                        <option value="Motoboy">Motoboy</option>
-                                        <option value="Transportadora">Transportadora</option>
-                                        <option value="Retirada">Retirada</option>
-                                    </select>
-                                    <button type="button" id="add-transport-btn" class="add-transport-btn"
-                                        title="Adicionar nova opção de transporte">+</button>
-                                </div>
-                            </div>
-                            <div class="field-card">
-                                <label class="field-label">ANOTAÇÕES</label>
-                                <textarea id="notes" class="modern-textarea"
-                                    placeholder="Digite suas anotações aqui..."></textarea>
-                            </div>
+                        <div class="field-card">
+                            <label class="field-label">ENDEREÇO</label>
+                            <input type="text" id="address" class="modern-input"
+                                placeholder="Digite o endereço completo">
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- ================================================
-                 Accordion 2: Pagamento
-                 ================================================ -->
-            <div class="accordion">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <h3>💳 Pagamento</h3>
-                    <span class="accordion-icon">▼</span>
-                </div>
-                <div class="accordion-content">
-                    <div class="accordion-inner">
-                        <div class="field-card payment-methods-card">
-                            <div class="payment-methods-header-row">
-                                <label class="field-label">PAGAMENTO</label>
-                                <label class="general-deadline-label-inline">Prazo Geral</label>
-                                <input type="number" id="general-deadline-days" class="general-deadline-input-inline"
-                                    min="0" max="999" step="1" placeholder="dias">
-                                <span class="general-deadline-date-inline" id="general-deadline-date"></span>
-                            </div>
-                            <div class="payment-methods-container">
-                                <!-- PIX -->
-                                <div class="payment-method-item">
-                                    <div class="payment-method-header">
-                                        <input type="checkbox" id="payment-pix" class="payment-checkbox">
-                                        <label for="payment-pix" class="payment-label">PIX</label>
-                                    </div>
-                                    <input type="text" id="payment-pix-details" class="payment-details-input"
-                                        placeholder="Chave PIX ou detalhes">
-                                </div>
-
-                                <!-- Cartão de Crédito -->
-                                <div class="payment-method-item">
-                                    <div class="payment-method-header">
-                                        <input type="checkbox" id="payment-credit" class="payment-checkbox">
-                                        <label for="payment-credit" class="payment-label">Cartão de Crédito</label>
-                                    </div>
-                                    <div class="credit-card-details-inline">
-                                        <input type="number" id="payment-credit-installments"
-                                            class="payment-installments-input-inline" value="1" min="1" max="12"
-                                            step="1">
-                                        <span id="payment-installments-label"
-                                            class="installments-label-inline">Parcelas</span>
-                                        <span id="credit-installment-value"
-                                            class="credit-installment-value-display-inline">de R$0,00</span>
-                                    </div>
-                                </div>
-
-                                <!-- Boleto -->
-                                <div class="payment-method-item">
-                                    <div class="payment-method-header boleto-header-inline">
-                                        <div class="boleto-checkbox-label">
-                                            <input type="checkbox" id="payment-boleto" class="payment-checkbox">
-                                            <label for="payment-boleto" class="payment-label">Boleto</label>
-                                        </div>
-                                        <div class="boleto-installments-inline">
-                                            <input type="number" id="installments"
-                                                class="modern-input installments-input" min="1" max="12" value="1">
-                                            <span id="boleto-installments-label" class="installments-label">Parcelas
-                                                de</span>
-                                            <span id="boleto-installment-value"
-                                                class="credit-installment-value-display-inline">R$0,00</span>
-                                        </div>
-                                    </div>
-                                    <div class="boleto-details">
-                                        <div id="payment-days-container" class="payment-days-grid">
-                                            <!-- Campos de prazo serão gerados dinamicamente -->
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Transferência Bancária -->
-                                <div class="payment-method-item">
-                                    <div class="payment-method-header">
-                                        <input type="checkbox" id="payment-transfer" class="payment-checkbox">
-                                        <label for="payment-transfer"
-                                            class="payment-label">Transferência/Depósito</label>
-                                    </div>
-                                    <textarea id="payment-transfer-details" class="payment-details-textarea"
-                                        placeholder="Dados bancários" rows="2"></textarea>
-                                </div>
+                    <div class="details-row">
+                        <div class="field-card">
+                            <label class="field-label">TELEFONE</label>
+                            <input type="tel" id="phone" class="modern-input" placeholder="(00) 00000-0000">
+                        </div>
+                        <div class="field-card">
+                            <label class="field-label">FRETE</label>
+                            <input type="number" id="freight" class="modern-input" step="0.01" min="0"
+                                placeholder="0,00">
+                        </div>
+                        <div class="field-card">
+                            <label class="field-label">TRANSPORTE</label>
+                            <div class="transport-container">
+                                <select id="transport-select" class="modern-input">
+                                    <option value="">Selecione o transporte</option>
+                                    <option value="Correios - PAC">Correios - PAC</option>
+                                    <option value="Correios - Sedex">Correios - Sedex</option>
+                                    <option value="Motoboy">Motoboy</option>
+                                    <option value="Transportadora">Transportadora</option>
+                                    <option value="Retirada">Retirada</option>
+                                </select>
+                                <button type="button" id="add-transport-btn" class="add-transport-btn"
+                                    title="Adicionar nova opção de transporte">+</button>
                             </div>
                         </div>
+                        <div class="field-card">
+                            <label class="field-label">ANOTAÇÕES</label>
+                            <textarea id="notes" class="modern-textarea"
+                                placeholder="Digite suas anotações aqui..."></textarea>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- ================================================
-                 Accordion 3: Produtos
-                 ================================================ -->
-            <div class="accordion open">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <h3>📦 Produtos</h3>
-                    <span class="accordion-icon">▼</span>
-                </div>
-                <div class="accordion-content">
-                    <div class="accordion-inner">
-                        <!-- Seção de Produtos -->
-                        <section class="products-section">
-                            <h2>Produtos Disponíveis</h2>
-
-                            <!-- Controles de Filtro e Desconto -->
-                            <div class="products-controls-row"
-                                style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
-                                <div class="search-input-wrapper" style="flex:1 1 100%;order:1;min-width:150px;">
-                                    <input type="text" id="product-search" class="modern-input search-input"
-                                        placeholder="🔍 Buscar produto...">
-                                    <button id="clear-search-btn" class="clear-search-btn"
-                                        title="Limpar pesquisa">×</button>
-                                </div>
-                                <div
-                                    style="display:flex;align-items:center;justify-content:center;gap:50px;order:2;flex:1;">
-                                    <div
-                                        style="display:flex;flex-direction:column;align-items:center;gap:0;margin:0 15px;">
-                                        <input type="checkbox" id="hide-empty-lines" class="payment-checkbox">
-                                        <label for="hide-empty-lines" class="payment-label"
-                                            style="font-size:9px;white-space:normal;line-height:1.1;text-align:center;">Ocultar<br>linhas
-                                            vazias</label>
-                                    </div>
-                                    <div class="field-card general-discount-card"
-                                        style="width:40px;padding:2px;margin:0 15px;">
-                                        <label class="field-label"
-                                            style="font-size:6px;font-weight:bold;text-align:center;width:100%;">DESC.
-                                            GERAL (%)</label>
-                                        <input type="number" id="general-discount" class="modern-input"
-                                            style="padding:2px;font-size:10px;width:100%;text-align:center;" step="0.01"
-                                            min="0" max="100" placeholder="0.00">
-                                    </div>
-                                    <button id="clear-quantities-btn" class="btn clear-quantities-icon-btn"
-                                        style="height:22px;padding:0 3px;font-size:10px;margin:0 15px;"
-                                        title="Limpar todas as quantidades">🗑️</button>
-                                </div>
-                            </div>
-
-                            <!-- Tabela de Produtos -->
-                            <div class="products-table-container">
-                                <table class="products-table">
+                    <div class="col-header" style="margin-top: 10px; border-radius: 12px;">
+                        <h3>📦 Embalagens</h3>
+                    </div>
+                    <section class="packaging-section">
+                        <div class="packaging-card">
+                            <div class="packaging-content">
+                                <table class="packaging-table">
                                     <thead>
                                         <tr>
-                                            <th>Produto</th>
-                                            <th>Quantidade</th>
-                                            <th>Preço<br>Cat.</th>
-                                            <th>Desc.<br>(%)</th>
-                                            <th>Preço c/<br>Desc.</th>
-                                            <th>Total</th>
-                                            <th>Lote</th>
+                                            <th>Caixa</th>
+                                            <th>Qtde</th>
+                                            <th>Peso (g)</th>
+                                            <th>Peso Tot</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="products-tbody">
-                                        <!-- Produtos serão gerados dinamicamente -->
+                                    <tbody id="packaging-tbody">
+                                        <!-- Embalagens -->
                                     </tbody>
                                 </table>
+                                <button id="add-new-packaging-btn" class="btn btn-secondary add-item-btn" style="width:100%; margin-top:10px;">+ Ads.</button>
                             </div>
-                        </section>
-
-                    </div>
+                        </div>
+                    </section>
                 </div>
             </div>
 
-            <!-- ================================================
-                 Accordion 4: Embalagens
-                 ================================================ -->
-            <div class="accordion open">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <h3>📦 Embalagens</h3>
-                    <span class="accordion-icon">▼</span>
+            <!-- COLUNA 2: PRODUTOS -->
+            <div class="kanban-col kanban-col-wide">
+                <div class="col-header">
+                    <h3>📦 Catálogo de Produtos</h3>
                 </div>
-                <div class="accordion-content">
-                    <div class="accordion-inner">
-                        <section class="packaging-section">
-                            <div class="packaging-card">
-                                <div class="packaging-content">
-                                    <table class="packaging-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Caixa</th>
-                                                <th>Qtde</th>
-                                                <th>Peso (g)</th>
-                                                <th>Peso Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="packaging-tbody">
-                                            <!-- Embalagens serão geradas dinamicamente -->
-                                        </tbody>
-                                    </table>
-                                    <button id="add-new-packaging-btn" class="btn btn-secondary add-item-btn">+
-                                        Adicionar outro item</button>
-                                </div>
+                <div class="col-body">
+                    <section class="products-section">
+                        <!-- Controles de Filtro e Desconto -->
+                        <div class="products-controls-row"
+                            style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+                            <div class="search-input-wrapper" style="flex:1 1 100%;order:1;min-width:150px;">
+                                <input type="text" id="product-search" class="modern-input search-input"
+                                    placeholder="🔍 Buscar produto...">
+                                <button id="clear-search-btn" class="clear-search-btn"
+                                    title="Limpar pesquisa">×</button>
                             </div>
-                        </section>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================================================
-                 Accordion 5: Resumo
-                 ================================================ -->
-            <div class="accordion open">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <h3>📊 Resumo do Pedido</h3>
-                    <span class="accordion-icon">▼</span>
-                </div>
-                <div class="accordion-content">
-                    <div class="accordion-inner">
-                        <div class="summary-card">
-                            <h3>Resumo</h3>
-                            <div class="summary-boxes-container"
-                                style="display:grid !important;grid-template-columns:1fr 1fr !important;grid-template-rows:auto auto auto !important;gap:6px !important;">
-                                <!-- Linha 1: Vl. Bruto + Vl. Empresa -->
-                                <div class="summary-box summary-line-1" style="grid-column:1/2 !important;">
-                                    <span class="summary-box-label">Vl. Bruto:</span>
-                                    <span id="gross-value" class="summary-box-value currency">R$ 0,00</span>
-                                </div>
-                                <div class="summary-box summary-line-1" style="grid-column:2/3 !important;">
-                                    <span class="summary-box-label">Vl. Empresa:</span>
-                                    <span id="discounted-value" class="summary-box-value currency">R$ 0,00</span>
-                                </div>
-                                <!-- Linha 2: Vl. Frete | Crédito Pago -->
-                                <div class="summary-box summary-line-2" style="grid-column:1/2 !important;">
-                                    <span class="summary-box-label">Vl. Frete:</span>
-                                    <span id="freight-value" class="summary-box-value currency">R$ 0,00</span>
-                                </div>
-                                <div class="summary-box" style="grid-column:2/3 !important;">
-                                    <span class="summary-box-label">Crédito Pago:</span>
-                                    <input type="number" id="credit-paid" class="modern-input summary-box-input"
-                                        style="width:70px;padding:2px;font-size:11px;" placeholder="0,00" min="0"
-                                        step="0.01">
-                                </div>
-                                <!-- Linha 3: Qtde Total | Peso Total -->
-                                <div class="summary-box summary-line-3"
-                                    style="grid-column:1/2 !important;display:flex;flex-direction:column;align-items:center;text-align:center;">
-                                    <span class="summary-box-label" style="text-align:center;width:100%;">Qtde
-                                        Total:</span>
-                                    <span id="total-quantity" class="summary-box-value"
-                                        style="text-align:center;width:100%;display:block;">0</span>
-                                </div>
-                                <div class="summary-box" style="grid-column:2/3 !important;">
-                                    <span class="summary-box-label">Peso Total:</span>
-                                    <span id="total-weight" class="summary-box-value">0.00 kg</span>
-                                </div>
-                            </div>
-                            <!-- Lucro e Vl. Acerto -->
-                            <div class="summary-highlight-row"
-                                style="display:flex;justify-content:space-between;gap:12px;margin-top:6px;">
-                                <div id="profit-item"
-                                    style="flex:1;display:flex;flex-direction:column;align-items:center;padding:4px;background:#f0f9f0;border-radius:4px;border:1px solid #4caf50;">
-                                    <span class="summary-box-label highlight-settlement-value"
-                                        style="font-weight:bold;font-size:9px;color:#2e7d32;">Lucro:</span>
-                                    <span id="profit-value"
-                                        class="summary-box-value currency highlight-settlement-value"
-                                        style="font-weight:bold;font-size:12px;color:#2e7d32;">R$ 0,00</span>
-                                </div>
+                            <div
+                                style="display:flex;align-items:center;justify-content:center;gap:50px;order:2;flex:1;">
                                 <div
-                                    style="flex:1;display:flex;flex-direction:column;align-items:center;padding:4px;background:#fff3e0;border-radius:4px;border:1px solid #ff9800;">
-                                    <span class="summary-box-label"
-                                        style="font-weight:bold;font-size:9px;color:#e65100;">Vl. Acerto:</span>
-                                    <div style="display:flex;align-items:center;gap:4px;">
-                                        <span id="settlement-value" class="summary-box-value currency"
-                                            style="font-weight:bold;font-size:12px;color:#e65100;">R$ 0,00</span>
-                                        <button id="copy-settlement-btn" class="btn copy-btn"
-                                            style="padding:2px 4px;font-size:9px;"
-                                            title="Copiar valor do acerto">📋</button>
+                                    style="display:flex;flex-direction:column;align-items:center;gap:0;margin:0 15px;">
+                                    <input type="checkbox" id="hide-empty-lines" class="payment-checkbox">
+                                    <label for="hide-empty-lines" class="payment-label"
+                                        style="font-size:9px;white-space:normal;line-height:1.1;text-align:center;">Ocultar<br>linhas
+                                        vazias</label>
+                                </div>
+                                <div class="field-card general-discount-card"
+                                    style="width:40px;padding:2px;margin:0 15px;">
+                                    <label class="field-label"
+                                        style="font-size:6px;font-weight:bold;text-align:center;width:100%;">DESC.
+                                        GERAL (%)</label>
+                                    <input type="number" id="general-discount" class="modern-input"
+                                        style="padding:2px;font-size:10px;width:100%;text-align:center;" step="0.01"
+                                        min="0" max="100" placeholder="0.00">
+                                </div>
+                                <button id="clear-quantities-btn" class="btn clear-quantities-icon-btn"
+                                    style="height:22px;padding:0 3px;font-size:10px;margin:0 15px;"
+                                    title="Limpar todas as quantidades">🗑️</button>
+                            </div>
+                        </div>
+
+                        <!-- Tabela de Produtos -->
+                        <div class="products-table-container">
+                            <table class="products-table">
+                                <thead>
+                                    <tr>
+                                        <th>Produto</th>
+                                        <th>Qtde</th>
+                                        <th>Preço<br>Cat.</th>
+                                        <th>Desc.<br>(%)</th>
+                                        <th>Preço c/<br>Desc.</th>
+                                        <th>Total</th>
+                                        <th>Lote</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="products-tbody">
+                                    <!-- Produtos gerados -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- COLUNA 3: PAGAMENTO E RESUMO (FECHAMENTO) -->
+            <div class="kanban-col">
+                <div class="col-header">
+                    <h3>💳 Pagamento & Fechamento</h3>
+                </div>
+                <div class="col-body">
+                    
+                    <div class="field-card payment-methods-card" style="margin-bottom:10px;">
+                        <div class="payment-methods-header-row">
+                            <label class="field-label">PRAZO GERAL</label>
+                            <input type="number" id="general-deadline-days" class="general-deadline-input-inline"
+                                min="0" max="999" step="1" placeholder="dias">
+                            <span class="general-deadline-date-inline" id="general-deadline-date"></span>
+                        </div>
+                        <div class="payment-methods-container" style="display:flex; flex-direction:column; gap:8px;">
+                            <!-- PIX -->
+                            <div class="payment-method-item">
+                                <div class="payment-method-header" style="margin-bottom:4px;">
+                                    <input type="checkbox" id="payment-pix" class="payment-checkbox">
+                                    <label for="payment-pix" class="payment-label">PIX</label>
+                                </div>
+                                <input type="text" id="payment-pix-details" class="payment-details-input"
+                                    placeholder="Chave PIX ou detalhes">
+                            </div>
+
+                            <!-- Cartão de Crédito -->
+                            <div class="payment-method-item">
+                                <div class="payment-method-header" style="margin-bottom:4px;">
+                                    <input type="checkbox" id="payment-credit" class="payment-checkbox">
+                                    <label for="payment-credit" class="payment-label">Cartão de Crédito</label>
+                                </div>
+                                <div class="credit-card-details-inline">
+                                    <input type="number" id="payment-credit-installments"
+                                        class="payment-installments-input-inline" value="1" min="1" max="12" step="1">
+                                    <span id="payment-installments-label" class="installments-label-inline">Parcelas</span>
+                                    <span id="credit-installment-value" class="credit-installment-value-display-inline">de R$0,00</span>
+                                </div>
+                            </div>
+
+                            <!-- Boleto -->
+                            <div class="payment-method-item">
+                                <div class="payment-method-header boleto-header-inline" style="margin-bottom:4px;">
+                                    <div class="boleto-checkbox-label">
+                                        <input type="checkbox" id="payment-boleto" class="payment-checkbox">
+                                        <label for="payment-boleto" class="payment-label">Boleto</label>
+                                    </div>
+                                    <div class="boleto-installments-inline">
+                                        <input type="number" id="installments" class="modern-input installments-input" min="1" max="12" value="1">
+                                        <span id="boleto-installments-label" class="installments-label">Parcelas</span>
+                                        <span id="boleto-installment-value" class="credit-installment-value-display-inline">R$0,00</span>
+                                    </div>
+                                </div>
+                                <div class="boleto-details">
+                                    <div id="payment-days-container" class="payment-days-grid">
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Detalhes do Pagamento -->
-                            <div class="installments-section">
-                                <h4>Pagamento</h4>
-                                <div id="installments-details">
-                                    <!-- Detalhes das parcelas serão gerados dinamicamente -->
+                            <!-- Transferência Bancária -->
+                            <div class="payment-method-item">
+                                <div class="payment-method-header" style="margin-bottom:4px;">
+                                    <input type="checkbox" id="payment-transfer" class="payment-checkbox">
+                                    <label for="payment-transfer" class="payment-label">Transferência/Depósito</label>
+                                </div>
+                                <textarea id="payment-transfer-details" class="payment-details-textarea"
+                                    placeholder="Dados bancários" rows="1"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RESUMO E AÇÕES -->
+                    <div class="summary-card" style="box-shadow:none; border:1px solid rgba(0,0,0,0.05); padding:10px; margin-bottom:10px;">
+                        <h3 style="font-size:14px; margin-bottom:8px;">Resumo Financeiro</h3>
+                        <div class="summary-boxes-container" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                            <div class="summary-box">
+                                <span class="summary-box-label">Vl. Bruto:</span>
+                                <span id="gross-value" class="summary-box-value currency">R$ 0,00</span>
+                            </div>
+                            <div class="summary-box">
+                                <span class="summary-box-label">Vl. Empresa:</span>
+                                <span id="discounted-value" class="summary-box-value currency">R$ 0,00</span>
+                            </div>
+                            <div class="summary-box">
+                                <span class="summary-box-label">Vl. Frete:</span>
+                                <span id="freight-value" class="summary-box-value currency">R$ 0,00</span>
+                            </div>
+                            <div class="summary-box">
+                                <span class="summary-box-label">Crédito Pago:</span>
+                                <input type="number" id="credit-paid" class="modern-input summary-box-input" style="padding:2px;font-size:11px;" placeholder="0,00" min="0" step="0.01">
+                            </div>
+                            <div class="summary-box">
+                                <span class="summary-box-label">Qtde Total:</span>
+                                <span id="total-quantity" class="summary-box-value">0</span>
+                            </div>
+                            <div class="summary-box">
+                                <span class="summary-box-label">Peso Total:</span>
+                                <span id="total-weight" class="summary-box-value">0.00 kg</span>
+                            </div>
+                        </div>
+
+                        <!-- Lucro e Vl. Acerto -->
+                        <div class="summary-highlight-row" style="display:flex;justify-content:space-between;gap:8px;margin-top:8px;">
+                            <div id="profit-item" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:6px;background:#f0f9f0;border-radius:6px;border:1px solid #4caf50;">
+                                <span class="summary-box-label" style="font-weight:bold;font-size:9px;color:#2e7d32;">Lucro:</span>
+                                <span id="profit-value" class="summary-box-value currency" style="font-weight:bold;font-size:12px;color:#2e7d32;">R$ 0,00</span>
+                            </div>
+                            <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:6px;background:#fff3e0;border-radius:6px;border:1px solid #ff9800;">
+                                <span class="summary-box-label" style="font-weight:bold;font-size:9px;color:#e65100;">Vl. Acerto:</span>
+                                <div style="display:flex;align-items:center;gap:4px;">
+                                    <span id="settlement-value" class="summary-box-value currency" style="font-weight:bold;font-size:13px;color:#e65100;">R$ 0,00</span>
+                                    <button id="copy-settlement-btn" class="btn copy-btn" style="padding:2px 4px;font-size:9px;">📋</button>
                                 </div>
                             </div>
                         </div>
-                        </section>
-
-                        <!-- Botões de Ação -->
-                        <div class="action-buttons">
-                            <button id="save-order-btn" class="btn btn-primary">💾 Salvar Pedido</button>
-                            <button id="print-order-btn" class="btn btn-secondary">🖨️ Imprimir Pedido</button>
-                            <button id="export-excel-btn" class="btn btn-success">📊 Salvar em Excel</button>
-                            <button id="expedition-btn" class="btn btn-secondary">📦 Expedição</button>
-                            <button id="history-btn" class="btn btn-secondary">📋 Histórico</button>
-                            <button id="dashboard-btn" class="btn btn-secondary">📈 Dashboard</button>
-                        </div>
-
+                        <div id="installments-details" style="font-size:10px; margin-top:8px;"></div>
                     </div>
+
+                    <!-- BOTOES DE AÇÃO FINAIS (FUNNEL CRO SPECIALIST) -->
+                    <div class="action-buttons" style="display:flex; flex-direction:column; gap:8px;">
+                        <button id="save-order-btn" class="btn btn-primary" style="font-size:16px; padding:12px; height:auto;">💾 Fechar Faturamento</button>
+                        <div style="display:flex; gap:8px;">
+                            <button id="print-order-btn" class="btn btn-secondary" style="flex:1;">🖨️ Imprimir</button>
+                            <button id="export-excel-btn" class="btn btn-success" style="flex:1;">📊 Excel</button>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button id="expedition-btn" class="btn btn-secondary" style="flex:1;">📦 Expedição</button>
+                            <button id="history-btn" class="btn btn-secondary" style="flex:1;">📋 Histórico</button>
+                        </div>
+                        <button id="dashboard-btn" class="btn btn-secondary" style="width:100%; display:none;">📈 Dashboard</button>
+                    </div>
+
                 </div>
             </div>
 
