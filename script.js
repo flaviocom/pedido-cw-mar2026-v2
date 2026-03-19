@@ -1,24 +1,24 @@
 console.log("script.js carregado!");
 const products = [
-    { id: 0, name: "Complement hidratante para cabelos", catalogPrice: 57.9, weight: 0.17, img: "img-produtos/53014f38-ee72-4b14-b182-3bfbfa924d8f.webp" },
+    { id: 0, name: "Complemente hidratante para cabelos", catalogPrice: 57.9, weight: 0.17, img: "img-produtos/complemente hidratante para cabelos.jpg" },
     { id: 1, name: "Condicionador completive especial", catalogPrice: 57.9, weight: 0.31, img: "img-produtos/0a8433d7-801b-4833-8847-2717f9c3c8aa.webp" },
     { id: 2, name: "Óleo de tratamento para cabelos", catalogPrice: 64.9, weight: 0.15, img: "img-produtos/ae8405f9-2318-4dbf-9087-c39a8e9335e5.webp" },
     { id: 3, name: "Shampoo especial aditivado", catalogPrice: 58.9, weight: 0.34, img: "img-produtos/fe8317bd-7c5c-4657-a2ce-5c68fa5343d2.webp" },
     { id: 4, name: "Shampoo para cabelos normais", catalogPrice: 57.9, weight: 0.35, img: "img-produtos/9deb3da9-9952-46e9-baca-dc169c9b84c6.webp" },
-    { id: 5, name: "Shampoo para cabelos oleosos", catalogPrice: 58.9, weight: 0.335, img: "" },
+    { id: 5, name: "Shampoo para cabelos oleosos", catalogPrice: 58.9, weight: 0.335, img: "img-produtos/shampoo-cabelos-oleosos.jpg" },
     { id: 6, name: "Shampoo para cabelos secos e danificados", catalogPrice: 57.9, weight: 0.325, img: "img-produtos/e6c1db83-64ad-4574-8294-3f2a30b82495.webp" },
     { id: 7, name: "Creme colágeno", catalogPrice: 74.9, weight: 0.075, img: "img-produtos/f09ed8d5-9647-460d-9cec-21f1eb220406.webp" },
     { id: 8, name: "Creme hidratante facial", catalogPrice: 58.9, weight: 0.075, img: "img-produtos/e7606bfa-cf5c-4fe9-8980-fde4b4b4206d.webp" },
     { id: 9, name: "Creme para limpeza facial", catalogPrice: 51.9, weight: 0.075, img: "img-produtos/d39f1d3b-a0f5-482c-9911-d919be0afd44.webp" },
     { id: 10, name: "Gel facial esfoliante", catalogPrice: 51.9, weight: 0.08, img: "img-produtos/cd0c3349-7aa5-4991-b644-8681239fb7bc.webp" },
     { id: 11, name: "Loção tônica facial", catalogPrice: 55.9, weight: 0.175, img: "img-produtos/808c425b-69e2-4dac-9069-3f35cf3be4c9.webp" },
-    { id: 12, name: "Óleo vitaminado para a pele facial", catalogPrice: 51.9, weight: 0.026, img: "img-produtos/25dc70ad-3efe-4133-aabd-05d772eb9daf.webp" },
+    { id: 12, name: "Óleo vitaminado para pele facial", catalogPrice: 51.9, weight: 0.026, img: "img-produtos/óleo vitaminado para pele facial.png" },
     { id: 13, name: "Máscara facial SPArgila amarela peel off", catalogPrice: 74.9, weight: 0.095, img: "img-produtos/a54dbcf3-293d-4b1c-b253-21e6772e4fa1.webp" },
-    { id: 14, name: "Creme para mãos e unhas", catalogPrice: 55.9, weight: 0.07, img: "" },
+    { id: 14, name: "Creme para mãos e unhas", catalogPrice: 55.9, weight: 0.07, img: "img-produtos/creme-maos-unhas.jpg" },
     { id: 15, name: "Creme para massagem corporal", catalogPrice: 74.9, weight: 0.176, img: "img-produtos/265f026d-4e42-429c-a246-25f5c5717abe.webp" },
-    { id: 16, name: "Creme para os pés", catalogPrice: 55.9, weight: 0.075, img: "" },
+    { id: 16, name: "Creme para os pés", catalogPrice: 55.9, weight: 0.075, img: "img-produtos/creme-pes.jpg" },
     { id: 17, name: "Creme para os seios", catalogPrice: 55.9, weight: 0.076, img: "img-produtos/b9d11d7b-801a-4db9-b1ff-ce34cd101b60.webp" },
-    { id: 18, name: "Creme peeling", catalogPrice: 56.9, weight: 0.07, img: "" },
+    { id: 18, name: "Creme peeling", catalogPrice: 56.9, weight: 0.07, img: "img-produtos/creme-peeling.jpg" },
     { id: 19, name: "Lipo gel - Redutor de medidas", catalogPrice: 85.9, weight: 0.28, img: "img-produtos/6db7fe50-d097-475c-860f-0f3c94f90d0c.webp" },
     { id: 20, name: "Loção cremosa camomila", catalogPrice: 62.9, weight: 0.282, img: "img-produtos/980b7d27-759e-4cf4-8bcb-c129fb9474c2.webp" },
     { id: 21, name: "Loção cremosa pepino", catalogPrice: 62.9, weight: 0.283, img: "img-produtos/04883d2e-946a-41db-a6e9-aaa1b5d66540.webp" },
@@ -26,15 +26,15 @@ const products = [
     { id: 23, name: "Vela vegetal para massagem", catalogPrice: 70.9, weight: 0.109, img: "img-produtos/402da41b-e582-457c-b425-714b6612204e.webp" },
     { id: 24, name: "Banho de ervas", catalogPrice: 62.9, weight: 0.18, img: "img-produtos/2a4b3903-7c5e-4c26-84f8-5452a2828c69.webp" },
     { id: 25, name: "Sabonete íntimo natural", catalogPrice: 74.9, weight: 0.228, img: "img-produtos/73efbf07-566b-4ba5-a695-9d8388e07d59.webp" },
-    { id: 26, name: "Desodorante antiperspirante", catalogPrice: 55.9, weight: 0.075, img: "" },
-    { id: 27, name: "Desodorante I", catalogPrice: 90.9, weight: 0.251, img: "" },
-    { id: 28, name: "Desodorante II", catalogPrice: 90.9, weight: 0.249, img: "" },
+    { id: 26, name: "Desodorante antiperspirante", catalogPrice: 55.9, weight: 0.075, img: "img-produtos/desodorante-antiperspirante.jpg" },
+    { id: 27, name: "Desodorante I", catalogPrice: 90.9, weight: 0.251, img: "", hidePlaceholder: true },
+    { id: 28, name: "Desodorante II", catalogPrice: 90.9, weight: 0.249, img: "img-produtos/desodorante-ii.jpg" },
     { id: 29, name: "Desodorante III", catalogPrice: 90.9, weight: 0.251, img: "img-produtos/a97a9a90-1c7d-40cb-a2c8-ecd6f91cca0c.webp" },
     { id: 30, name: "Desodorante IV", catalogPrice: 90.9, weight: 0.252, img: "img-produtos/3c00cdfc-12b7-4a7e-99c5-ec8a7bd75bb3.webp" },
     { id: 31, name: "Desodorante V", catalogPrice: 90.9, weight: 0.247, img: "img-produtos/3b3418b1-2d5b-411e-9937-4d927024f269.webp" },
     { id: 32, name: "Gel refrescante pós Barba", catalogPrice: 79.9, weight: 0.15, img: "img-produtos/45f595b9-9902-4626-a9f6-8497748a53e5.webp" },
-    { id: 33, name: "Catálogo", catalogPrice: 23.9, applyGeneralDiscount: false, weight: 0.094, img: "" },
-    { id: 34, name: "Talão de consumidor", catalogPrice: 5.9, applyGeneralDiscount: false, weight: 0.07, img: "" }
+    { id: 33, name: "Catálogo", catalogPrice: 23.9, applyGeneralDiscount: false, weight: 0.094, img: "", hidePlaceholder: true },
+    { id: 34, name: "Talão de consumidor", catalogPrice: 5.9, applyGeneralDiscount: false, weight: 0.07, img: "", hidePlaceholder: true }
 ];
 
 // Configurações globais
@@ -410,8 +410,8 @@ function createProductRow(product, index, isCustom = false, hasAnyDiscount = tru
     const discountColumn = hasAnyDiscount ? `\n        <td>\n            <input type=\"number\" \n                   value=\"${product.individualDiscount !== null ? product.individualDiscount : (product.applyGeneralDiscount !== false ? orderState.generalDiscount : '')}\" \n                   min=\"0\" \n                   max=\"100\"\n                   step=\"0.1\"\n                   placeholder=\"${product.applyGeneralDiscount === false ? "0.0" : orderState.generalDiscount.toFixed(1)}\"\n                   data-product-id=\"${product.id}\"\n                   class=\"discount-input ${product.individualDiscount !== null ? "highlight-discount" : ""}\">\n        </td>\n        <td class=\"price discounted-price\">${formatCurrency(discountedPrice)}</td>\n    ` : '';
 
     const imgHtml = product.img
-        ? `<div class="product-thumb-wrapper"><img src="${product.img}" alt="${product.name}" class="product-thumb" loading="lazy"></div>`
-        : `<span class="product-thumb-placeholder">🧴</span>`;
+        ? `<div class="product-thumb-wrapper"><img src="${product.img}" alt="${product.name}" class="product-thumb" loading="lazy" ${product.name.toLowerCase().includes('óleo vitaminado') ? 'style="transform: scale(0.8);"' : ''}></div>`
+        : (product.hidePlaceholder ? '<div class="product-thumb-placeholder" style="background:transparent; border:none;"></div>' : `<span class="product-thumb-placeholder">🧴</span>`);
 
     row.innerHTML = `
         <td class="product-name">

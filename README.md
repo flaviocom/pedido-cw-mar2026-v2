@@ -1,6 +1,6 @@
-# Pedido de Vendas - CharmWay v2
+# AI React Website Template
 
-Sistema de Pedidos de Vendas para CharmWay · Beleza & Bem-estar. Interface premium com design mobile-first.
+A flexible, feature-rich React template designed for AI-generated websites with modern development tools and libraries.
 
 ## ✨ Key Features
 
